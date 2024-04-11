@@ -14,37 +14,48 @@ import unformatPhoneNumber from '@/shared/utils/unformat-phone-number'
 
 import request from '@/shared/utils/request'
 
+import Loader from '@/shared/UI/loader'
+
 const Cart = () => {
     const [phoneNumber, setPhoneNumber] = useState<string>('')
     const [isValid, setIsValid] = useState(true)
+    const [isLoading, setIsLoading] = useState(false)
 
-    const { isNotificationHidden, setIsNotificationHidden } = useNotificationStore()
+    const { setIsNotificationHidden } = useNotificationStore()
     const { setCurrentProductId } = useCartStore()
 
     const { items, setItems } = useCartStore()
 
     const order = async () => {
-        if (phoneNumber.length < 18) {
-            setIsValid(false)
+        try {
+            if (phoneNumber.length < 18) {
+                setIsValid(false)
 
-            return
-        }
+                return
+            }
 
-        if (items.length === 0) {
-            return
-        }
+            if (items.length === 0) {
+                return
+            }
 
-        const data = await request('order', 'post', {
-            phone: unformatPhoneNumber(phoneNumber),
-            cart: items.map((item) => ({ id: item.product.id, quantity: item.quantity }))
-        })
+            setIsLoading(true)
 
-        if (data.success) {
-            setIsNotificationHidden(false)
+            const data = await request('order', 'post', {
+                phone: unformatPhoneNumber(phoneNumber),
+                cart: items.map((item) => ({ id: item.product.id, quantity: item.quantity }))
+            })
 
-            setItems([])
-            setPhoneNumber('')
-            setCurrentProductId(null)
+            if (data.success) {
+                setIsNotificationHidden(false)
+
+                setItems([])
+                setPhoneNumber('')
+                setCurrentProductId(null)
+            }
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -79,7 +90,7 @@ const Cart = () => {
                     onChange={(event) => handleChange(event.target.value)}
                 />
                 <button className='wrapper' onClick={() => order()}>
-                    заказать
+                    {isLoading ? <Loader isSmall={true} /> : 'заказать'}
                 </button>
             </div>
         </div>

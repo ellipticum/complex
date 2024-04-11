@@ -10,16 +10,16 @@ import IProduct from '@/entities/product/model'
 
 import Product from '@/entities/product/UI'
 
+import Loader from '@/shared/UI/loader'
+
 interface Props {
     items: any
 }
 
 const Products = ({ items }: Props) => {
-    const [loading, setLoading] = useState(false)
+    const [isLoading, setIsisLoading] = useState(false)
     const [page, setPage] = useState(1)
     const [products, setProducts] = useState<IProduct[]>(items.products)
-
-    console.log(products)
 
     const sentinelRef = useRef<HTMLDivElement>(null)
 
@@ -29,19 +29,21 @@ const Products = ({ items }: Props) => {
 
     const fetchData = async (page: number) => {
         try {
-            setLoading(true)
+            setIsisLoading(true)
+
             const data = await request(`products?page=${page}&page_size=20`)
+
             setProducts((prevProducts) => [...prevProducts, ...data.products])
         } catch (error) {
-            console.error('Error fetching data:', error)
+            console.error(error)
         } finally {
-            setLoading(false)
+            setIsisLoading(false)
         }
     }
 
     const handleIntersection = (entries: IntersectionObserverEntry[]) => {
         const sentinel = entries[0]
-        if (sentinel.isIntersecting && !loading) {
+        if (sentinel.isIntersecting && !isLoading) {
             setPage((prevPage) => prevPage + 1)
         }
     }
@@ -57,13 +59,15 @@ const Products = ({ items }: Props) => {
     }, [])
 
     return (
-        <div className={styles.products}>
-            {products.map((product: IProduct, index) => (
-                <Product key={index} {...product} />
-            ))}
-            <div ref={sentinelRef}></div>
-            {loading && <div className={styles.loader}>Loading...</div>}
-        </div>
+        <>
+            <div className={styles.products}>
+                {products.map((product: IProduct, index) => (
+                    <Product key={index} {...product} />
+                ))}
+                <div ref={sentinelRef}></div>
+            </div>
+            {isLoading && <Loader />}
+        </>
     )
 }
 
