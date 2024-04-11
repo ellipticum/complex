@@ -11,21 +11,22 @@ import styles from './styles.module.scss'
 import useCartStore from '@/widgets/cart/model'
 
 import IProduct from '@/entities/product/model'
+import { set } from 'immutable'
 
 const Product = ({ id, image_url, title, description, price }: IProduct) => {
     const [quantity, setQuantity] = useState(0)
     const { currentProductId, setCurrentProductId, items, setItems } = useCartStore()
 
     useEffect(() => {
-        const existingItem = items.find((item) => item.productId === id)
+        const existingItem = items.find((item) => item.product.id === id)
         setQuantity(existingItem?.quantity || 0)
     }, [id, useCartStore])
 
     const addToCart = () => {
         setItems((prevState) => {
-            const existingItem = prevState.find((item) => item.productId === id)
+            const existingItem = prevState.find((item) => item.product.id === id)
             if (!existingItem) {
-                return [...prevState, { quantity: 1, productId: id }]
+                return [...prevState, { quantity: 1, product: { id, title }, price }]
             }
             return prevState
         })
@@ -39,12 +40,19 @@ const Product = ({ id, image_url, title, description, price }: IProduct) => {
         setQuantity(newQuantity)
         setItems((prevState) =>
             newQuantity === 0
-                ? prevState.filter((item) => item.productId !== id)
+                ? prevState.filter((item) => item.product.id !== id)
                 : prevState.map((item) =>
-                      item.productId === id ? { ...item, quantity: newQuantity } : item
+                      item.product.id === id
+                          ? { ...item, quantity: newQuantity, price: price * newQuantity }
+                          : item
                   )
         )
     }
+
+    useEffect(() => {
+        const existingItem = items.find((item) => item.product.id === id)
+        setQuantity(existingItem?.quantity || 0)
+    }, [id, items])
 
     return (
         <div className={styles.product}>

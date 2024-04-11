@@ -1,8 +1,12 @@
 import axios from 'axios'
 
-const request = async (route: string) => {
+const request = async (
+    route: string,
+    method: 'get' | 'post' = 'get',
+    body: { [key: string]: any } = {}
+) => {
     try {
-        const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/${route}`)
+        const { data } = await axios[method](`${process.env.NEXT_PUBLIC_API_URL}/${route}`, body)
 
         return data
     } catch (error) {

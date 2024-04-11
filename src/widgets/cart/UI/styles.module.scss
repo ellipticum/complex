@@ -1,21 +1,90 @@
 .cart {
+  background: var(--primary-color-10);
+  color: var(--additional-color-10);
+
+  border-radius: .9375rem;
+  padding: .875rem;
+
   width: min(100%, 43.75rem);
   display: flex;
   flex-direction: column;
-  gap: .5rem;
+  gap: 1.5rem;
 
   & input::placeholder {
     color: var(--primary-color-5);
   }
+
+  @media (min-width: 768px) {
+    padding: 1.25rem;
+  }
+}
+
+.title {
+  width: 10rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.0rem;
+
+  @media (min-width: 576px) {
+    width: min(100%, 27.25rem);
+  }
+
+  & p {
+    font-size: 1.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.quantity {
+  width: 2.65rem;
+}
+
+.info {
+  display: flex;
+  gap: .5rem;
+  width: 12.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.input {
+  font-size: 2.0rem;
+  border: .25rem solid var(--additional-color-5);
+
+  @media (min-width: 400px) {
+    font-size: 2.25rem;
+  }
+}
+
+.invalid {
+  border-color: var(--negative-color-5);
+  color: var(--negative-color-5);
 }
 
 .heading {
   font-size: 2.5rem;
   text-align: center;
+  
+  @media (min-width: 768px) {
+    text-align: start;
+  }
 }
 
 .bottom {
   display: flex;
   flex-direction: column;
   gap: .5rem;
+  width: 100%;
+
+  @media (min-width: 768px) {
+    display: grid;
+    grid-template-columns: 5fr 3fr;
+  }
 }

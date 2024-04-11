@@ -6,33 +6,83 @@ import cn from 'classnames'
 
 import styles from './styles.module.scss'
 
-import formatPhoneNumber from '@/shared/utils/format-phone-number'
+import useCartStore from '@/widgets/cart/model'
+import useNotificationStore from '@/widgets/notification/model'
 
-import Wrapper from '@/shared/UI/wrapper'
+import formatPhoneNumber from '@/shared/utils/format-phone-number'
+import unformatPhoneNumber from '@/shared/utils/unformat-phone-number'
+
+import request from '@/shared/utils/request'
 
 const Cart = () => {
     const [phoneNumber, setPhoneNumber] = useState<string>('')
+    const [isValid, setIsValid] = useState(true)
+
+    const { isNotificationHidden, setIsNotificationHidden } = useNotificationStore()
+    const { setCurrentProductId } = useCartStore()
+
+    const { items, setItems } = useCartStore()
+
+    const order = async () => {
+        if (phoneNumber.length < 18) {
+            setIsValid(false)
+
+            return
+        }
+
+        if (items.length === 0) {
+            return
+        }
+
+        const data = await request('order', 'post', {
+            phone: unformatPhoneNumber(phoneNumber),
+            cart: items.map((item) => ({ id: item.product.id, quantity: item.quantity }))
+        })
+
+        if (data.success) {
+            setIsNotificationHidden(false)
+
+            setItems([])
+            setPhoneNumber('')
+            setCurrentProductId(null)
+        }
+    }
+
+    const handleChange = (value: string) => {
+        setIsValid(true)
+        setPhoneNumber(formatPhoneNumber(value))
+    }
 
     return (
-        <Wrapper isFitted={true}>
-            <div className={styles.cart}>
-                <h2 className={styles.heading}>Добавленные товары</h2>
-                <ul className={styles.products}></ul>
-                <div className={styles.bottom}>
-                    <input
-                        className='wrapper'
-                        type='phone'
-                        placeholder='+7 (___) ___ __-__'
-                        maxLength={18}
-                        value={phoneNumber}
-                        onChange={(event) => setPhoneNumber(formatPhoneNumber(event.target.value))}
-                    />
-                    <button className='wrapper' onClick={() => {}}>
-                        заказать
-                    </button>
-                </div>
+        <div className={styles.cart}>
+            <h2 className={styles.heading}>Добавленные товары</h2>
+            <ul className={styles.content}>
+                {items.map((item) => {
+                    return (
+                        <li className={styles.item}>
+                            <p className={styles.title}>{item.product.title}</p>
+                            <div className={styles.info}>
+                                <p className={styles.quantity}>x{item.quantity}</p>
+                                <p>{item.price}₽</p>
+                            </div>
+                        </li>
+                    )
+                })}
+            </ul>
+            <div className={styles.bottom}>
+                <input
+                    className={cn('wrapper', styles.input, { [styles.invalid]: !isValid })}
+                    type='phone'
+                    placeholder='+7 (___) ___ __-__'
+                    maxLength={18}
+                    value={phoneNumber}
+                    onChange={(event) => handleChange(event.target.value)}
+                />
+                <button className='wrapper' onClick={() => order()}>
+                    заказать
+                </button>
             </div>
-        </Wrapper>
+        </div>
     )
 }
 
