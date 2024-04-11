@@ -23,8 +23,6 @@ const Products = ({ items }: Props) => {
     const [page, setPage] = useState(1)
     const [products, setProducts] = useState<IProduct[]>(items.products)
 
-    const { setItems } = useCartStore()
-
     const sentinelRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {

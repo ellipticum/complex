@@ -17,14 +17,11 @@ import request from '@/shared/utils/request'
 import Loader from '@/shared/UI/loader'
 
 const Cart = () => {
-    const [phoneNumber, setPhoneNumber] = useState<string>(
-        () => localStorage.getItem('phoneNumber') || ''
-    )
     const [isValid, setIsValid] = useState(true)
     const [isLoading, setIsLoading] = useState(false)
 
     const { setIsNotificationHidden } = useNotificationStore()
-    const { setCurrentProductId } = useCartStore()
+    const { phoneNumber, setPhoneNumber, setCurrentProductId } = useCartStore()
 
     const { items, setItems } = useCartStore()
 
@@ -65,10 +62,6 @@ const Cart = () => {
         setIsValid(true)
         setPhoneNumber(formatPhoneNumber(value))
     }
-
-    useEffect(() => {
-        localStorage.setItem('phoneNumber', String(phoneNumber))
-    }, [phoneNumber])
 
     return (
         <div className={styles.cart}>
