@@ -1,0 +1,11 @@
+.products {
+  display: grid;
+  margin-top: 2.5rem;
+  gap: 1.125rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+    margin-top: 3.5rem;
+    gap: 1.35rem;
+  }
+}

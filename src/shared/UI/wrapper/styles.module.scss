@@ -1,0 +1,11 @@
+.wrapper {
+  background: var(--primary-color-10);
+  color: var(--additional-color-10);
+
+  border-radius: .9375rem;
+  padding: 1.25rem;
+
+  &.fitted {
+    width: fit-content;
+  }
+}

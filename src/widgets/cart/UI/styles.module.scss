@@ -1,0 +1,21 @@
+.cart {
+  width: min(100%, 43.75rem);
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+
+  & input::placeholder {
+    color: var(--primary-color-5);
+  }
+}
+
+.heading {
+  font-size: 2.5rem;
+  text-align: center;
+}
+
+.bottom {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}

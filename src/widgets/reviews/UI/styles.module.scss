@@ -1,0 +1,13 @@
+.reviews {
+  display: grid;
+  justify-content: center;
+  gap: 1.0rem;
+  margin-bottom: 5rem;
+  width: min(100%, 60rem);
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.0rem;
+    margin-bottom: 10rem;
+  }
+}

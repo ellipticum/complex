@@ -2,16 +2,24 @@
   min-height: 100vh;
 }
 
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .heading {
   background: var(--primary-color-15);
   font-size: 2.5rem;
   padding: 0 .5rem .375rem;
   border-radius: .9375rem;
   text-align: center;
-  line-height: normal;
+  margin-bottom: 6.0rem;
+  width: 100%;
 
   @media (min-width: 768px) {
     font-size: 6.0rem;
     padding-bottom: 1.0rem;
+    margin-bottom: 6.5rem;
   }
 }
