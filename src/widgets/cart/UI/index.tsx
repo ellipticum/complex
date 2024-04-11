@@ -27,7 +27,9 @@ const Cart = () => {
                         value={phoneNumber}
                         onChange={(event) => setPhoneNumber(formatPhoneNumber(event.target.value))}
                     />
-                    <button className='wrapper'>заказать</button>
+                    <button className='wrapper' onClick={() => {}}>
+                        заказать
+                    </button>
                 </div>
             </div>
         </Wrapper>
