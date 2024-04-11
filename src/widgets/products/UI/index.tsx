@@ -6,6 +6,8 @@ import styles from './styles.module.scss'
 
 import request from '@/shared/utils/request'
 
+import useCartStore from '@/widgets/cart/model'
+
 import IProduct from '@/entities/product/model'
 
 import Product from '@/entities/product/UI'
@@ -20,6 +22,8 @@ const Products = ({ items }: Props) => {
     const [isLoading, setIsisLoading] = useState(false)
     const [page, setPage] = useState(1)
     const [products, setProducts] = useState<IProduct[]>(items.products)
+
+    const { setItems } = useCartStore()
 
     const sentinelRef = useRef<HTMLDivElement>(null)
 
@@ -50,9 +54,11 @@ const Products = ({ items }: Props) => {
 
     useEffect(() => {
         const observer = new IntersectionObserver(handleIntersection, { threshold: 1 })
+
         if (sentinelRef.current) {
             observer.observe(sentinelRef.current)
         }
+
         return () => {
             observer.disconnect()
         }

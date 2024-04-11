@@ -11,16 +11,11 @@ import styles from './styles.module.scss'
 import useCartStore from '@/widgets/cart/model'
 
 import IProduct from '@/entities/product/model'
-import { set } from 'immutable'
 
 const Product = ({ id, image_url, title, description, price }: IProduct) => {
-    const [quantity, setQuantity] = useState(0)
     const { currentProductId, setCurrentProductId, items, setItems } = useCartStore()
 
-    useEffect(() => {
-        const existingItem = items.find((item) => item.product.id === id)
-        setQuantity(existingItem?.quantity || 0)
-    }, [id, useCartStore])
+    const existingItem = items.find((item) => item.product.id === id)
 
     const addToCart = () => {
         setItems((prevState) => {
@@ -34,10 +29,13 @@ const Product = ({ id, image_url, title, description, price }: IProduct) => {
     }
 
     const changeQuantity = (delta: number) => {
-        const newQuantity = quantity + delta
+        const newQuantity = (existingItem ? existingItem.quantity : 0) + delta
         if (newQuantity < 0) return
 
-        setQuantity(newQuantity)
+        if (!existingItem) {
+            addToCart()
+        }
+
         setItems((prevState) =>
             newQuantity === 0
                 ? prevState.filter((item) => item.product.id !== id)
@@ -48,11 +46,6 @@ const Product = ({ id, image_url, title, description, price }: IProduct) => {
                   )
         )
     }
-
-    useEffect(() => {
-        const existingItem = items.find((item) => item.product.id === id)
-        setQuantity(existingItem?.quantity || 0)
-    }, [id, items])
 
     return (
         <div className={styles.product}>
@@ -68,7 +61,9 @@ const Product = ({ id, image_url, title, description, price }: IProduct) => {
                         <button className='wrapper' onClick={() => changeQuantity(-1)}>
                             -
                         </button>
-                        <div className={cn('wrapper', styles.quantity)}>{quantity}</div>
+                        <div className={cn('wrapper', styles.quantity)}>
+                            {existingItem ? existingItem.quantity : 0}
+                        </div>
                         <button className='wrapper' onClick={() => changeQuantity(1)}>
                             +
                         </button>

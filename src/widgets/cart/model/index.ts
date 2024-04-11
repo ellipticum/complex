@@ -28,4 +28,13 @@ const useCartStore = create<State>((set) => ({
         set((state) => ({ items: typeof value === 'function' ? value(state.items) : value }))
 }))
 
+useCartStore.subscribe((state) => {
+    localStorage.setItem('cartItems', JSON.stringify(state.items))
+})
+
+const savedItems = localStorage.getItem('cartItems')
+if (savedItems) {
+    useCartStore.setState({ items: JSON.parse(savedItems) })
+}
+
 export default useCartStore

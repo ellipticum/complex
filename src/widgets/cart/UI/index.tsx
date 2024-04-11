@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import cn from 'classnames'
 
@@ -17,7 +17,9 @@ import request from '@/shared/utils/request'
 import Loader from '@/shared/UI/loader'
 
 const Cart = () => {
-    const [phoneNumber, setPhoneNumber] = useState<string>('')
+    const [phoneNumber, setPhoneNumber] = useState<string>(
+        () => localStorage.getItem('phoneNumber') || ''
+    )
     const [isValid, setIsValid] = useState(true)
     const [isLoading, setIsLoading] = useState(false)
 
@@ -64,13 +66,17 @@ const Cart = () => {
         setPhoneNumber(formatPhoneNumber(value))
     }
 
+    useEffect(() => {
+        localStorage.setItem('phoneNumber', String(phoneNumber))
+    }, [phoneNumber])
+
     return (
         <div className={styles.cart}>
             <h2 className={styles.heading}>Добавленные товары</h2>
             <ul className={styles.content}>
-                {items.map((item) => {
+                {items.map((item, index) => {
                     return (
-                        <li className={styles.item}>
+                        <li key={index} className={styles.item}>
                             <p className={styles.title}>{item.product.title}</p>
                             <div className={styles.info}>
                                 <p className={styles.quantity}>x{item.quantity}</p>
