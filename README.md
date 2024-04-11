@@ -16,7 +16,7 @@
 
 1. Клонировать репозиторий: git clone https://github.com/ellipticum/complex.git
 2. Установить зависимости: npm install
-3. Запустить проект: npm run dev
+3. Запустить проект: npm run build, npm run start / npm run dev
 4. Открыть в браузере http://localhost:3000 для просмотра проекта.
 
 
